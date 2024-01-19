@@ -8,6 +8,8 @@ import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 
 import static dynamic_fps.impl.util.Localization.localized;
@@ -77,7 +79,7 @@ public final class ClothConfig {
 
 				volumes.add(
 					entryBuilder.startIntSlider(
-						Component.translatable("soundCategory." + name),
+						new TranslatableComponent("soundCategory." + name),
 						(int) (config.volumeMultiplier(source) * 100),
 						0, 100
 					)
@@ -99,7 +101,7 @@ public final class ClothConfig {
 				.setDefaultValue(standard.graphicsState())
 				.setSaveConsumer(config::setGraphicsState)
 				.setEnumNameProvider(ClothConfig::graphicsStateMessage)
-				.setTooltipSupplier(ClothConfig::graphicsStateTooltip)
+				.setTooltipSupplier((current) -> ClothConfig.graphicsStateTooltip((GraphicsState) current)) // wth
 				.build()
 			);
 
@@ -149,14 +151,14 @@ public final class ClothConfig {
 
 	private static Component fpsTargetMessage(int value) {
 		if (toConfigFpsTarget(value) != -1) {
-			return Component.translatable("options.framerate", value);
+			return new TranslatableComponent("options.framerate", value);
 		} else {
-			return Component.translatable("options.framerateLimit.max");
+			return new TranslatableComponent("options.framerateLimit.max");
 		}
 	}
 
 	private static Component volumeMultiplierMessage(int value) {
-		return Component.literal(Integer.toString(value) + "%");
+		return new TextComponent(Integer.toString(value) + "%");
 	}
 
 	private static Component graphicsStateMessage(Enum<GraphicsState> graphicsState) {
